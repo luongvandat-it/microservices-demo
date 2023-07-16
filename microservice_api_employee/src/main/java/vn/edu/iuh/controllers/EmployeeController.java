@@ -74,4 +74,25 @@ public class EmployeeController {
         }
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<Employee> updateEmployee(@RequestParam Long id, @RequestBody Employee employee) {
+        try {
+            Optional<Employee> employeeOptional = employeeService.findById(id);
+            if (employeeOptional.isEmpty()) {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+            Employee _employee = employeeOptional.get();
+            _employee.setEmail(employee.getEmail());
+            _employee.setPhone(employee.getPhone());
+            _employee.setFirstName(employee.getLastName());
+            _employee.setRating(employee.getRating());
+            return new ResponseEntity<>(employeeService.save(_employee), HttpStatus.OK);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 }
