@@ -20,6 +20,10 @@ public class Employee {
     @Column(nullable = false)
     private String lastName;
     @Column(nullable = false)
+    private boolean gender;
+    @Column(nullable = false)
+    private String status = "Active";
+    @Column(nullable = false)
     private String phone;
     @Column(nullable = false)
     private String email;
