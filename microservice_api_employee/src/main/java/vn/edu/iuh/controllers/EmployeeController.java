@@ -1,6 +1,10 @@
 package vn.edu.iuh.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.models.Employee;
 import vn.edu.iuh.services.EmployeeService;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,6 +25,27 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    /**
+     * create employee
+     * @param employee
+     * @return
+     */
+    @PostMapping("/create")
+    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+        try{
+            Employee _employee = employeeService.save(employee);
+            return new ResponseEntity<>(_employee, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * get employee by id
+     * @param id id of employee
+     * @return object employee or null
+     */
     @GetMapping("/get")
     public ResponseEntity<Employee> findEmployeeById(@RequestParam long id) {
         try {
@@ -35,14 +61,17 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        try{
-            Employee _employee = employeeService.save(employee);
-            return new ResponseEntity<>(_employee, HttpStatus.CREATED);
-        } catch (Exception e) {
+    @GetMapping("/getAll")
+    public ResponseEntity<Page<Employee>> getAllEmployeePagination(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+        try {
+            Sort sort = Sort.by(Sort.Direction.ASC, "lastName");
+            Pageable pageable = PageRequest.of(page, size, sort);
+            Page<Employee> employees = employeeService.findAll(pageable);
+            return new ResponseEntity<>(employees, HttpStatus.OK);
+        }catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
