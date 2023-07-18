@@ -1,19 +1,15 @@
 package vn.edu.iuh.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.models.Employee;
 import vn.edu.iuh.services.EmployeeService;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,9 +22,10 @@ public class EmployeeController {
     }
 
     /**
+     * POST: /api/employee/create
      * create employee
      * @param employee
-     * @return
+     * @return return employee after save to database
      */
     @PostMapping("/create")
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
@@ -42,6 +39,7 @@ public class EmployeeController {
     }
 
     /**
+     * GET: /api/employee/get?id=
      * get employee by id
      * @param id id of employee
      * @return object employee or null
@@ -61,6 +59,12 @@ public class EmployeeController {
         }
     }
 
+    /**
+     * GET: /api/employee/getAll?page=&size=
+     * @param page page number
+     * @param size size of page
+     * @return return list employee or null
+     */
     @GetMapping("/getAll")
     public ResponseEntity<Page<Employee>> getAllEmployeePagination(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         try {
@@ -74,6 +78,12 @@ public class EmployeeController {
         }
     }
 
+    /**
+     * PUT: /api/employee/update?id=
+     * @param id
+     * @param employee
+     * @return return employee after updated
+     */
     @PutMapping("/update")
     public ResponseEntity<Employee> updateEmployee(@RequestParam Long id, @RequestBody Employee employee) {
         try {
