@@ -20,7 +20,6 @@ public class Booking {
     private String status;
     @Column(nullable = false)
     private String address;
-
     @ManyToOne
     @EqualsAndHashCode.Exclude
     private Employee employee;
