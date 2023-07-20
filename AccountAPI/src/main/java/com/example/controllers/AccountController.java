@@ -9,19 +9,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
-    private AccountServices accountServices;
+    private final AccountServices accountServices;
 
     public AccountController(AccountServices accountServices) {
         this.accountServices = accountServices;
     }
 
-    @PostMapping("/save")
-    public void saveAccount() {
-        accountServices.saveAccount(null);
+    @PostMapping("/register")
+    public void saveAccount(User user) {
+        accountServices.saveAccount(user);
     }
 
     @PostMapping("/findUserById")
-    public User findUserById() {
-        return accountServices.findUserById(0);
+    public User findUserById(long userId) {
+        return accountServices.findUserById(userId);
+    }
+
+    @PostMapping("/login")
+    public User login(String phone, String password) {
+        return accountServices.login(phone, password);
     }
 }

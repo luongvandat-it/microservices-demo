@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public class BookingServicesImpl implements BookingServices {
-    private BookingRepository bookingRepository;
+    private final BookingRepository bookingRepository;
 
     public BookingServicesImpl(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;

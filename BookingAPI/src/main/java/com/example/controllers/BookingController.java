@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/booking")
 public class BookingController {
-    private BookingServices bookingServices;
+    private final BookingServices bookingServices;
 
     public BookingController(BookingServices bookingServices) {
         this.bookingServices = bookingServices;
