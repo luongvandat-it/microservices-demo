@@ -2,6 +2,7 @@ package com.example.controllers;
 
 import com.example.models.Booking;
 import com.example.services.BookingServices;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +20,12 @@ public class BookingController {
     }
 
     @PostMapping("/save")
-    public Booking saveBooking(Booking booking) {
-        return bookingServices.saveBooking(booking);
+    public ResponseEntity<Booking> saveBooking(Booking booking) {
+        return ResponseEntity.ok(bookingServices.saveBooking(booking));
     }
 
     @GetMapping("/findBookingsByUser")
-    public List<Booking> findBookingsByUser(long userId) {
-        return bookingServices.findBookingsByUser(userId);
+    public ResponseEntity<List<Booking>> findBookingsByUser(long userId) {
+        return ResponseEntity.ok(bookingServices.findBookingsByUser(userId));
     }
 }

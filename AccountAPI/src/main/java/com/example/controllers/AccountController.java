@@ -2,6 +2,7 @@ package com.example.controllers;
 
 import com.example.models.User;
 import com.example.services.AccountServices;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,12 +22,20 @@ public class AccountController {
     }
 
     @PostMapping("/findUserById")
-    public User findUserById(long userId) {
-        return accountServices.findUserById(userId);
+    public ResponseEntity<User> findUserById(long userId) {
+        User user = accountServices.findUserById(userId);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/login")
-    public User login(String phone, String password) {
-        return accountServices.login(phone, password);
+    public ResponseEntity<User> login(String phone, String password) {
+        User user = accountServices.login(phone, password);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.notFound().build();
     }
 }
