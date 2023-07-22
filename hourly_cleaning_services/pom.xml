@@ -22,6 +22,8 @@
         <module>eureka-server</module>
         <module>gateway-service</module>
         <module>employee-service</module>
+        <module>auth-service</module>
+        <module>user-service</module>
     </modules>
     <build>
         <plugins>
