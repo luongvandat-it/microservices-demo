@@ -1,11 +1,14 @@
 package vn.edu.iuh.userservice.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.edu.iuh.userservice.models.User;
+import vn.edu.iuh.userservice.payloads.RequestLoginDto;
+import vn.edu.iuh.userservice.payloads.ResponseLoginDto;
 import vn.edu.iuh.userservice.services.AccountServices;
 
 @RestController
@@ -18,10 +21,14 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public User saveAccount(@RequestBody User user) {
-        User _user = accountServices.saveAccount(user);
-        System.out.println(_user);
-        return _user;
+    public ResponseEntity<?> saveAccount(@RequestBody User user) {
+        try {
+            User _user = accountServices.saveAccount(user);
+            return ResponseEntity.ok("User registered successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("There was an error with your registration. Please try registering again.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/findUserById")
@@ -34,11 +41,16 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(String phone, String password) {
-        User user = accountServices.login(phone, password);
-        if (user != null) {
-            return ResponseEntity.ok(user);
+    public ResponseEntity<ResponseLoginDto> login(@RequestBody RequestLoginDto loginDto) {
+        try {
+            ResponseLoginDto responseLoginDto = accountServices.login(loginDto.getPhone(), loginDto.getPassword());
+            if (responseLoginDto != null) {
+                return ResponseEntity.ok(responseLoginDto);
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
         }
-        return ResponseEntity.notFound().build();
     }
 }

@@ -21,7 +21,7 @@ public class User {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String phone;
     @Column(nullable = false)
     private String password;

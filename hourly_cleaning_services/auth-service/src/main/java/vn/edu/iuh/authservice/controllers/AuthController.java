@@ -1,6 +1,7 @@
 package vn.edu.iuh.authservice.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +17,12 @@ import vn.edu.iuh.authservice.services.AuthService;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody AuthRequest authRequest) {
-        return ResponseEntity.ok(authService.register(authRequest));
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
+        AuthResponse authResponse = authService.login(authRequest);
+        if (null == authResponse) {
+            return new ResponseEntity<>("Login failed. Please try again later.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return ResponseEntity.ok(authResponse);
     }
 }

@@ -13,8 +13,8 @@ import java.util.Set;
 @Builder
 public class UserVO {
     private String id;
-    private String password;
-//    private Set<> role = "ADMIN";
+    private String firstName;
+    private String lastName;
     private String phone;
     private boolean gender;
 }
