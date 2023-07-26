@@ -1,16 +1,15 @@
 package vn.edu.iuh.userservice.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "roles")
-@Data
+@ToString
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Role {
@@ -20,7 +19,8 @@ public class Role {
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<User> users;
 }

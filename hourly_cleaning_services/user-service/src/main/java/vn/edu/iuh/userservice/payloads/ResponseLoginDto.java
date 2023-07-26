@@ -4,6 +4,9 @@ import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.edu.iuh.userservice.models.Role;
+
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -14,4 +17,5 @@ public class ResponseLoginDto {
     private String lastName;
     private String phone;
     private boolean gender;
+    private String roles;
 }

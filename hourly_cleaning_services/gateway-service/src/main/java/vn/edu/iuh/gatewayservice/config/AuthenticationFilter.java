@@ -7,12 +7,9 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import vn.edu.iuh.gatewayservice.utils.JwtUtil;
@@ -32,12 +29,15 @@ public class AuthenticationFilter  implements GatewayFilter {
         if (routerValidator.isSecured.test(request)) {
             if (this.isAuthMissing(request))
                 return this.onError(exchange, "Authorization header is missing in request", HttpStatus.UNAUTHORIZED);
-            final  String token = getAuthHeader(request);
+            String token = getAuthHeader(request);
+            token = token.replace("Bearer ", "");
+            log.info(token);
             if(jwtUtil.isInvalid(token)) {
                 return this.onError(exchange, "Authorization header is invalid", HttpStatus.UNAUTHORIZED);
             }
             this.populateRequestWithHeaders(exchange, token);
         }
+        log.info("toi day r");
         return chain.filter(exchange);
     }
 
@@ -60,32 +60,30 @@ public class AuthenticationFilter  implements GatewayFilter {
      */
     private Mono<Void> onError(ServerWebExchange exchange, String err, HttpStatus httpStatus) {
         ServerHttpResponse response = exchange.getResponse();
-//        byte[] bytes = err.getBytes(StandardCharsets.UTF_8);
-//        DataBuffer buffer = response.bufferFactory().wrap(bytes);
-//        response.getHeaders().setContentType(MediaType.TEXT_PLAIN);
-//        Publisher<DataBuffer> just = Mono.just(buffer);
-//        response.writeWith(Mono.just("loi"));
-        // TODO add response body
-        Map<String, String> responseBody = Map.of("message", "Unknown error");
-        System.err.println(err);
+        log.error(err);
         response.setStatusCode(httpStatus);
-//        response.writeWith(BodyInserters.fromValue(responseBody));
         return response.setComplete();
-//        return ServerResponse.status(httpStatus)
-//                .contentType(MediaType.APPLICATION_NDJSON)
-//                .body(BodyInserters.fromValue(responseBody));
-//        return response.
     }
 
+    /**
+     * Get string authorization from header
+     * @param request
+     * @return String authorization. Ex: Bearer header.payload.signature
+     */
     private String getAuthHeader(ServerHttpRequest request) {
         return request.getHeaders().getOrEmpty("Authorization").get(0);
     }
 
+    /**
+     * Set the userId and roles into request headers
+     * @param exchange ServerWebExchange
+     * @param token JSon Web Token (JWT)
+     */
     private void populateRequestWithHeaders(ServerWebExchange exchange, String token) {
         Claims claims = jwtUtil.getAllClaimsFromToken(token);
         exchange.getRequest().mutate()
-                .header("id", String.valueOf(claims.get("id")))
-                .header("role", String.valueOf(claims.get("role")))
+                .header("userId", String.valueOf(claims.get("id")))
+                .header("roles", String.valueOf(claims.get("roles")))
                 .build();
     }
 

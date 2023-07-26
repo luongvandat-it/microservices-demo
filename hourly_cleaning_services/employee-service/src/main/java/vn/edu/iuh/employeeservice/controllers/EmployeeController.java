@@ -1,5 +1,6 @@
 package vn.edu.iuh.employeeservice.controllers;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/employee")
+@Log4j2
 public class EmployeeController {
     private final EmployeeService employeeService;
 
@@ -24,11 +26,15 @@ public class EmployeeController {
     /**
      * POST: /api/employee/create
      * create employee
-     * @param employee
+     * Require: Only admin can update
+     * @param employee Employee
      * @return return employee after save to database
      */
     @PostMapping("/create")
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<Employee> createEmployee(@RequestHeader Long userId, @RequestHeader String roles, @RequestBody Employee employee) {
+        if (!roles.contains("ROLE_ADMIN")) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
         try{
             Employee _employee = employeeService.save(employee);
             return new ResponseEntity<>(_employee, HttpStatus.CREATED);
@@ -39,30 +45,9 @@ public class EmployeeController {
     }
 
     /**
-     * GET: /api/employee/get?id=
-     * get employee by id
-     * @param id id of employee
-     * @return object employee or null
-     */
-    @GetMapping("/get")
-    public ResponseEntity<Employee> findEmployeeById(@RequestParam long id) {
-        try {
-            Optional<Employee> employeeOptional = employeeService.findById(id);
-            if (employeeOptional.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            Employee employee = employeeOptional.get();
-            return new ResponseEntity<>(employee, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    /**
      * GET: /api/employee/getAll?page=&size=
-     * @param page page number
-     * @param size size of page
+     * @param page page number (default value 0)
+     * @param size size of page (default value 10)
      * @return return list employee or null
      */
     @GetMapping("/getAll")
@@ -79,13 +64,40 @@ public class EmployeeController {
     }
 
     /**
+     * GET: /api/employee/get?id=
+     * get employee by id
+     * @param id id of employee
+     * @return object employee or null
+     */
+    @GetMapping("/get")
+    public ResponseEntity<Employee> findEmployeeById(@RequestHeader Long userId, @RequestHeader String roles, @RequestParam long id) {
+        try {
+            log.info(userId);
+            log.info(roles);
+            Optional<Employee> employeeOptional = employeeService.findById(id);
+            if (employeeOptional.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            Employee employee = employeeOptional.get();
+            return new ResponseEntity<>(employee, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
      * PUT: /api/employee/update?id=
-     * @param id
-     * @param employee
+     * Require: Only admin can update
+     * @param id id employee
+     * @param employee Employee
      * @return return employee after updated
      */
     @PutMapping("/update")
-    public ResponseEntity<Employee> updateEmployee(@RequestParam Long id, @RequestBody Employee employee) {
+    public ResponseEntity<Employee> updateEmployee(@RequestHeader Long userId, @RequestHeader String roles, @RequestParam Long id, @RequestBody Employee employee) {
+        if (!roles.contains("ROLE_ADMIN")) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
         try {
             Optional<Employee> employeeOptional = employeeService.findById(id);
             if (employeeOptional.isEmpty()) {
@@ -94,7 +106,8 @@ public class EmployeeController {
             Employee _employee = employeeOptional.get();
             _employee.setEmail(employee.getEmail());
             _employee.setPhone(employee.getPhone());
-            _employee.setFirstName(employee.getLastName());
+            _employee.setFirstName(employee.getFirstName());
+            _employee.setLastName(employee.getLastName());
             _employee.setRating(employee.getRating());
             return new ResponseEntity<>(employeeService.save(_employee), HttpStatus.OK);
         }catch (Exception e) {
@@ -102,7 +115,5 @@ public class EmployeeController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
 }

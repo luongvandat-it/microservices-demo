@@ -60,14 +60,14 @@ public class JwtUtil {
 
     public String generateToken(UserVO userVO, JwtType type) {
         Map<String, Object> claims = new HashMap<>();
-//        claims.put("role", userVO.getRole());
         claims.put("id", userVO.getId());
+        claims.put("roles", userVO.getRoles());
         return this.doGenerateToken(claims, userVO.getPhone(), type);
     }
 
     public String doGenerateToken(Map<String, Object> claims, String phone, JwtType type) {
         final Date createdDate = new Date();
-        final Date  expirationDate = new Date(createdDate.getTime() + expirationTime);
+        final Date  expirationDate = new Date(createdDate.getTime() + expirationTime * 1000 * 5);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(phone)

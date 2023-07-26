@@ -1,9 +1,12 @@
-package vn.edu.iuh.authservice.entities.value_objects;
+package vn.edu.iuh.gatewayservice.entities.value_objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor

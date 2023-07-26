@@ -7,10 +7,11 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import vn.edu.iuh.gatewayservice.entities.value_objects.UserVO;
 
 import java.security.Key;
-import java.text.ParseException;
 import java.util.Date;
+import java.util.Set;
 
 @Component
 @Slf4j
@@ -47,5 +48,10 @@ public class JwtUtil {
 
     public boolean isInvalid(String token) {
         return this.isTokenExpired(token);
+    }
+
+    public String getUser(String token) {
+        Claims claims = this.getAllClaimsFromToken(token);
+        return claims.get("roles", String.class);
     }
 }
