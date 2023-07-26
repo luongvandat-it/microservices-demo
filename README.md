@@ -53,7 +53,7 @@ Result
 }
 ```
 ### 2. API Employee
-#### 2.1 Create a new employee
+#### 2.1 Create a new employee (required role ROLE_ADMIN)
 ```
 curl --location 'http://localhost:8080/api/employee/create' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6IltST0xFX0dVRVNUXSIsImlkIjoiMTciLCJzdWIiOiIwMzU0OTI3NDAzIiwiaWF0IjoxNjkwMzQ0NzczLCJleHAiOjE2OTA3NzY3NzN9.HImeXe7xgdhpAQgV40gQYgKRhqSB4uqrigLp9JT_bx4jLVFQ8kpH8kX-bR8Bh4X4nwJoZsQMuNtJ6PhqAjxWyA' \
@@ -67,7 +67,7 @@ curl --location 'http://localhost:8080/api/employee/create' \
     "rating": 5
 }'
 ```
-#### 2.2 Get employee
+#### 2.2 Get a employee
 ```
 curl --location 'http://localhost:8080/api/employee/get?id=2' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6IltST0xFX0dVRVNUXSIsImlkIjoiMTciLCJzdWIiOiIwMzU0OTI3NDAzIiwiaWF0IjoxNjkwMjk5MzI3LCJleHAiOjE2OTA3MzEzMjd9.1fFpHQlAdhLGaPddefLTDlAL-Xnms1FB64r9pVTYNs_mWME7Y1QkWtURX06ZT_pWSJggcUhWYQhZWZvCXoLfZQ'
@@ -75,4 +75,20 @@ curl --location 'http://localhost:8080/api/employee/get?id=2' \
 #### 2.3 Get a list of employees
 ```
 curl --location 'http://localhost:8080/api/employee/getAll'
+```
+#### 2.4 Update a employee (required role ROLE_ADMIN)
+```
+curl --location --request PUT 'http://localhost:8080/api/employee/update?id=2' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6IltST0xFX0FETUlOXSIsImlkIjoiMjEiLCJzdWIiOiIwMzU0OTI3NDU2IiwiaWF0IjoxNjkwMzAyMjc2LCJleHAiOjE2OTA3MzQyNzZ9.ccMkeouE9bdgzZ_ecuRmb_dzkGlMyAIaSjq629TW_9MLKM1nQr9ngk5fAh0R2QiktaZ934fbzT9kVo3tslvbeQ' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "id": 2,
+    "firstName": "Nhân",
+    "lastName": "Viên 2",
+    "gender": true,
+    "status": "Active",
+    "phone": "0942487543",
+    "email": "nhanvien2@gmail.com",
+    "rating": 5.0
+}'
 ```
