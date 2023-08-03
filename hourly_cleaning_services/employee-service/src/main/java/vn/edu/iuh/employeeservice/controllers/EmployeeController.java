@@ -51,7 +51,10 @@ public class EmployeeController {
      * @return return list employee or null
      */
     @GetMapping("/getAll")
-    public ResponseEntity<Page<Employee>> getAllEmployeePagination(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+    public ResponseEntity<Page<Employee>> getAllEmployeePagination(@RequestHeader Long userId, @RequestHeader String roles,@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+        if (!roles.contains("ROLE_ADMIN")) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
         try {
             Sort sort = Sort.by(Sort.Direction.ASC, "lastName");
             Pageable pageable = PageRequest.of(page, size, sort);
