@@ -1,10 +1,9 @@
 package vn.edu.iuh.bookingservice.controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.bookingservice.models.Booking;
 import vn.edu.iuh.bookingservice.services.BookingServices;
 
@@ -20,12 +19,18 @@ public class BookingController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Booking> saveBooking(Booking booking) {
+    public ResponseEntity<Booking> saveBooking(@RequestBody Booking booking, @RequestHeader String roles) {
+        if (!roles.contains("ROLE_ADMIN") || !roles.contains("ROLE_GUEST")) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
         return ResponseEntity.ok(bookingServices.saveBooking(booking));
     }
 
     @GetMapping("/findBookingsByUser")
-    public ResponseEntity<List<Booking>> findBookingsByUser(long userId) {
+    public ResponseEntity<List<Booking>> findBookingsByUser(@RequestParam long userId, @RequestHeader String roles) {
+        if (!roles.contains("ROLE_ADMIN") || !roles.contains("ROLE_GUEST")) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
         return ResponseEntity.ok(bookingServices.findBookingsByUser(userId));
     }
 }

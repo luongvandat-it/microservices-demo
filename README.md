@@ -6,6 +6,7 @@ Implement basic microservices architecture
 
 - Luong Van Dat (C)
 - Nguyen Minh Quan
+## Teach
 
 ## List API
 ### 1. API Auth
@@ -66,6 +67,19 @@ curl --location 'http://localhost:8080/api/employee/create' \
     "email": "nhanvien4@gmail.com",
     "rating": 5
 }'
+```
+Result: Status 201 CREATED
+```
+{
+    "id": 2,
+    "firstName": "Nhân",
+    "lastName": "Viên 5",
+    "gender": true,
+    "status": "Active",
+    "phone": "0942487550",
+    "email": "nhanvien4@gmail.com",
+    "rating": 5
+}
 ```
 #### 2.2 Get a employee
 ```
