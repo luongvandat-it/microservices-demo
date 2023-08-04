@@ -22,6 +22,9 @@ public class AccountController {
 
     @PostMapping("/register")
     public ResponseEntity<?> saveAccount(@RequestBody User user) {
+        if (accountServices.findByPhone(user.getPhone()) != null) {
+            return new ResponseEntity<>("the phone number you've entered already exists with another account", HttpStatus.BAD_REQUEST);
+        }
         try {
             User _user = accountServices.saveAccount(user);
             return ResponseEntity.ok("User registered successfully");

@@ -37,7 +37,6 @@ public class AuthenticationFilter  implements GatewayFilter {
             }
             this.populateRequestWithHeaders(exchange, token);
         }
-        log.info("toi day r");
         return chain.filter(exchange);
     }
 
