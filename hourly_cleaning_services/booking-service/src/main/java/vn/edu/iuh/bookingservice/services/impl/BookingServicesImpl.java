@@ -21,6 +21,8 @@ public class BookingServicesImpl implements BookingServices {
 
     @Override
     public List<Booking> findBookingsByUser(long userId) {
-        return bookingRepository.findBookingsByUser(userId);
+        List<Booking> listBooking = bookingRepository.findBookingsByUser(userId);
+        System.out.println(listBooking);
+        return listBooking;
     }
 }

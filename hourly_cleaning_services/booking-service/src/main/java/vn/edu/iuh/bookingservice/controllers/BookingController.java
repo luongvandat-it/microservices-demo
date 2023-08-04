@@ -1,5 +1,6 @@
 package vn.edu.iuh.bookingservice.controllers;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/booking")
+@Log4j2
 public class BookingController {
     private final BookingServices bookingServices;
 
@@ -20,7 +22,8 @@ public class BookingController {
 
     @PostMapping("/save")
     public ResponseEntity<Booking> saveBooking(@RequestBody Booking booking, @RequestHeader String roles) {
-        if (!roles.contains("ROLE_ADMIN") || !roles.contains("ROLE_GUEST")) {
+        if (!roles.contains("ROLE_ADMIN") && !roles.contains("ROLE_GUEST")) {
+            log.info(roles);
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
         return ResponseEntity.ok(bookingServices.saveBooking(booking));
@@ -28,7 +31,7 @@ public class BookingController {
 
     @GetMapping("/findBookingsByUser")
     public ResponseEntity<List<Booking>> findBookingsByUser(@RequestParam long userId, @RequestHeader String roles) {
-        if (!roles.contains("ROLE_ADMIN") || !roles.contains("ROLE_GUEST")) {
+        if (!roles.contains("ROLE_ADMIN") && !roles.contains("ROLE_GUEST")) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
         return ResponseEntity.ok(bookingServices.findBookingsByUser(userId));

@@ -1,13 +1,14 @@
 package vn.edu.iuh.bookingservice.models;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@ToString
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Booking {
@@ -22,11 +23,13 @@ public class Booking {
     private String address;
     @ManyToOne
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Employee employee;
     @ManyToOne
     @EqualsAndHashCode.Exclude
     private Service service;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private User user;
 }

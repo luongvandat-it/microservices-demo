@@ -50,7 +50,7 @@ public class EmployeeController {
      * @param size size of page (default value 10)
      * @return return list employee or null
      */
-    @GetMapping("/getAll")
+    @GetMapping("/get-all")
     public ResponseEntity<Page<Employee>> getAllEmployeePagination(@RequestHeader Long userId, @RequestHeader String roles,@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         if (!roles.contains("ROLE_ADMIN")) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);

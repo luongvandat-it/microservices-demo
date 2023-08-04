@@ -48,4 +48,9 @@ public class AccountServicesImpl implements AccountServices {
         }
         return null;
     }
+
+    @Override
+    public User findByPhone(String phone) {
+        return accountRepository.findUserByPhone(phone);
+    }
 }
